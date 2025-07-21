@@ -1,0 +1,28 @@
+# Ambiente virtual do Python
+venv/
+.env
+
+# Arquivos de cache e temporários do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos de log e histórico
+*.log
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos gerados da NF-e
+*.xml
+
+# IDEs e editores
+.vscode/
+.idea/
+
+# Arquivos pessoais/sensíveis
+certificado.pfx
+*.pem
+*.key
