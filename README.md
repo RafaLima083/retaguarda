@@ -1,31 +1,31 @@
-# 📦 Sistema de Retaguarda com Emissão de NF-e (Modelo 55)
+# 📦 Sistema de Retaguarda com Emissão de NF-e
 
-Este projeto é um sistema de retaguarda desktop desenvolvido em Python com [Flet](https://flet.dev) para gerenciamento de produtos, clientes e **emissão de NF-e modelo 55**, com suporte a:
+Este projeto é um sistema completo de retaguarda em Python com interface gráfica utilizando [Flet](https://flet.dev) e suporte à emissão de NF-e modelo 55.
 
-- Cadastro de produtos com tributação
-- Cadastro de clientes com endereço completo
-- Geração de XML da NF-e (modelo 55)
-- Assinatura digital do XML com certificado A1
-- Interface responsiva com Flet
-- Banco de dados SQLite
+## ✨ Funcionalidades
 
----
+- Cadastro e listagem de **clientes** e **produtos**
+- Busca inteligente com filtros dinâmicos
+- Geração de **XML da NF-e** conforme layout oficial
+- Assinatura digital do XML com certificado A1 (.pfx)
+- Integração futura com Sefaz
+- Interface gráfica responsiva e moderna com Flet
 
-## 🚀 Tecnologias utilizadas
+## 🚀 Tecnologias
 
-- Python 3.11+
-- [Flet](https://flet.dev)
+- Python 3.12+
+- Flet
+- PyNFe (NF-e 4.0)
 - SQLite
-- PyNFe (versão da TadaSoftware)
-- xmlsec (assinatura digital)
-- OpenSSL
 
----
-
-## 🔧 Como rodar o projeto
-
-1. **Clone o repositório:**
+## 📦 Instalação
 
 ```bash
-git clone https://github.com/SEU_USUARIO/retaguarda.git
-cd retaguarda
+# Crie o ambiente virtual
+python -m venv venv
+# Ative o ambiente
+# Windows:
+venv\Scripts\activate
+
+# Instale as dependências
+pip install -r requirements.txt
