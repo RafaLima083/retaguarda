@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enviNFe xmlns="http://www.portalfiscal.inf.br/nfe" versao="4.00">
+  <idLote>1</idLote>
+  <indSinc>1</indSinc>
+  <NFe>
+    <infNFe Id="NFe1" versao="4.00">
+      <ide>
+        <cUF>35</cUF>
+        <natOp>VENDA</natOp>
+        <mod>55</mod>
+        <serie>1</serie>
+        <nNF>1</nNF>
+        <dhEmi>2025-07-21T13:44:20.396464</dhEmi>
+        <tpNF>1</tpNF>
+        <idDest>1</idDest>
+        <cMunFG></cMunFG>
+        <tpImp>1</tpImp>
+        <tpEmis>1</tpEmis>
+        <cDV>0</cDV>
+        <tpAmb>2</tpAmb>
+        <finNFe>1</finNFe>
+        <indFinal>1</indFinal>
+        <indPres>1</indPres>
+        <procEmi>0</procEmi>
+        <verProc>1.0</verProc>
+      </ide>
+
+      <emit>
+        <CNPJ>35473445000173</CNPJ>
+        <xNome>JBS SILVA TECNOLOGIA E SOLUCOES LTDA</xNome>
+        <enderEmit>
+          <xLgr>RUA PROFESSORA MARIA JOSEFINA KUMAN FLAQUER</xLgr>
+          <nro>439</nro>
+          <xBairro>JARDIM SILVIA MARIA</xBairro>
+          <cMun></cMun>
+          <xMun>MAUA</xMun>
+          <UF>SP</UF>
+          <CEP>09.380-400</CEP>
+          <fone>(11) 2324-2103</fone>
+        </enderEmit>
+        <IE>isento</IE>
+        <CRT>1</CRT>
+      </emit>
+
+      <dest>
+        <CPF>35.473.445/0001-73</CPF>
+        <xNome>JBS SILVA TECNOLOGIA E SOLUCOES LTDA</xNome>
+        <enderDest>
+          <xLgr>RUA PROFESSORA MARIA JOSEFINA KUMAN FLAQUER</xLgr>
+          <nro>439</nro>
+          <xBairro>JARDIM SILVIA MARIA</xBairro>
+          <cMun>3550308</cMun>
+          <xMun>MAUA</xMun>
+          <UF>SP</UF>
+          <CEP>09.380-400</CEP>
+        </enderDest>
+      </dest>
+    
+      <det nItem="1">
+        <prod>
+          <cProd>12</cProd>
+          <cEAN>1</cEAN>
+          <xProd>BOLO DE LARANJA KG</xProd>
+          <NCM>19059090</NCM>
+          <CEST></CEST>
+          <CFOP>5102</CFOP>
+          <uCom>UN</uCom>
+          <qCom>1.00</qCom>
+          <vUnCom>18.00</vUnCom>
+          <vProd>18.00</vProd>
+          <uTrib>UN</uTrib>
+          <qTrib>1.00</qTrib>
+          <vUnTrib>18.00</vUnTrib>
+          <indTot>1</indTot>
+        </prod>
+        <imposto>
+          <ICMS>
+            <ICMS18.0>
+              <orig>0</orig>
+              <CSOSN>18.0</CSOSN>
+            </ICMS18.0>
+          </ICMS>
+        </imposto>
+      </det>
+        
+      <det nItem="2">
+        <prod>
+          <cProd>12</cProd>
+          <cEAN>1</cEAN>
+          <xProd>BOLO DE LARANJA KG</xProd>
+          <NCM>19059090</NCM>
+          <CEST></CEST>
+          <CFOP>5102</CFOP>
+          <uCom>UN</uCom>
+          <qCom>1.00</qCom>
+          <vUnCom>18.00</vUnCom>
+          <vProd>18.00</vProd>
+          <uTrib>UN</uTrib>
+          <qTrib>1.00</qTrib>
+          <vUnTrib>18.00</vUnTrib>
+          <indTot>1</indTot>
+        </prod>
+        <imposto>
+          <ICMS>
+            <ICMS18.0>
+              <orig>0</orig>
+              <CSOSN>18.0</CSOSN>
+            </ICMS18.0>
+          </ICMS>
+        </imposto>
+      </det>
+        
+      <det nItem="3">
+        <prod>
+          <cProd>12</cProd>
+          <cEAN>1</cEAN>
+          <xProd>BOLO DE LARANJA KG</xProd>
+          <NCM>19059090</NCM>
+          <CEST></CEST>
+          <CFOP>5102</CFOP>
+          <uCom>UN</uCom>
+          <qCom>1.00</qCom>
+          <vUnCom>18.00</vUnCom>
+          <vProd>18.00</vProd>
+          <uTrib>UN</uTrib>
+          <qTrib>1.00</qTrib>
+          <vUnTrib>18.00</vUnTrib>
+          <indTot>1</indTot>
+        </prod>
+        <imposto>
+          <ICMS>
+            <ICMS18.0>
+              <orig>0</orig>
+              <CSOSN>18.0</CSOSN>
+            </ICMS18.0>
+          </ICMS>
+        </imposto>
+      </det>
+        
+      <det nItem="4">
+        <prod>
+          <cProd>12</cProd>
+          <cEAN>1</cEAN>
+          <xProd>BOLO DE LARANJA KG</xProd>
+          <NCM>19059090</NCM>
+          <CEST></CEST>
+          <CFOP>5102</CFOP>
+          <uCom>UN</uCom>
+          <qCom>1.00</qCom>
+          <vUnCom>18.00</vUnCom>
+          <vProd>18.00</vProd>
+          <uTrib>UN</uTrib>
+          <qTrib>1.00</qTrib>
+          <vUnTrib>18.00</vUnTrib>
+          <indTot>1</indTot>
+        </prod>
+        <imposto>
+          <ICMS>
+            <ICMS18.0>
+              <orig>0</orig>
+              <CSOSN>18.0</CSOSN>
+            </ICMS18.0>
+          </ICMS>
+        </imposto>
+      </det>
+        
+      <det nItem="5">
+        <prod>
+          <cProd>12</cProd>
+          <cEAN>1</cEAN>
+          <xProd>BOLO DE LARANJA KG</xProd>
+          <NCM>19059090</NCM>
+          <CEST></CEST>
+          <CFOP>5102</CFOP>
+          <uCom>UN</uCom>
+          <qCom>1.00</qCom>
+          <vUnCom>18.00</vUnCom>
+          <vProd>18.00</vProd>
+          <uTrib>UN</uTrib>
+          <qTrib>1.00</qTrib>
+          <vUnTrib>18.00</vUnTrib>
+          <indTot>1</indTot>
+        </prod>
+        <imposto>
+          <ICMS>
+            <ICMS18.0>
+              <orig>0</orig>
+              <CSOSN>18.0</CSOSN>
+            </ICMS18.0>
+          </ICMS>
+        </imposto>
+      </det>
+        
+      <det nItem="6">
+        <prod>
+          <cProd>12</cProd>
+          <cEAN>1</cEAN>
+          <xProd>BOLO DE LARANJA KG</xProd>
+          <NCM>19059090</NCM>
+          <CEST></CEST>
+          <CFOP>5102</CFOP>
+          <uCom>UN</uCom>
+          <qCom>1.00</qCom>
+          <vUnCom>18.00</vUnCom>
+          <vProd>18.00</vProd>
+          <uTrib>UN</uTrib>
+          <qTrib>1.00</qTrib>
+          <vUnTrib>18.00</vUnTrib>
+          <indTot>1</indTot>
+        </prod>
+        <imposto>
+          <ICMS>
+            <ICMS18.0>
+              <orig>0</orig>
+              <CSOSN>18.0</CSOSN>
+            </ICMS18.0>
+          </ICMS>
+        </imposto>
+      </det>
+        
+      <total>
+        <ICMSTot>
+          <vBC>0.00</vBC>
+          <vICMS>0.00</vICMS>
+          <vICMSDeson>0.00</vICMSDeson>
+          <vFCP>0.00</vFCP>
+          <vBCST>0.00</vBCST>
+          <vST>0.00</vST>
+          <vFCPST>0.00</vFCPST>
+          <vFCPSTRet>0.00</vFCPSTRet>
+          <vProd>108.00</vProd>
+          <vFrete>0.00</vFrete>
+          <vSeg>0.00</vSeg>
+          <vDesc>0.00</vDesc>
+          <vII>0.00</vII>
+          <vIPI>0.00</vIPI>
+          <vPIS>0.00</vPIS>
+          <vCOFINS>0.00</vCOFINS>
+          <vOutro>0.00</vOutro>
+          <vNF>108.00</vNF>
+        </ICMSTot>
+      </total>
+
+      <infAdic>
+        <infCpl>fdgfdgfdg</infCpl>
+      </infAdic>
+    </infNFe>
+  </NFe>
+</enviNFe>
