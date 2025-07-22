@@ -12,6 +12,22 @@ def tela_emissao_nfe(page: ft.Page, conteudo: ft.Container):
 
     nome_cliente = ft.Text("")
     cpf_cnpj_cliente = ft.Text("")
+    inscricao_estadual = ft.TextField(
+        label="Inscrição Estadual",
+        read_only=True,
+        width=200
+    )
+
+    uso_consumo = ft.Switch(
+        label="Uso e Consumo",
+        value=False
+    )
+
+    linha_cliente_extra = ft.Row(
+        [inscricao_estadual, uso_consumo],
+        wrap=True,
+        spacing=20
+    )
 
     card_cliente = ft.Card(
         content=ft.Container(
@@ -21,7 +37,14 @@ def tela_emissao_nfe(page: ft.Page, conteudo: ft.Container):
         )
     )
 
-    dropdown_clientes = ft.Dropdown(label="Cliente", options=[], expand=True)
+    dropdown_clientes = ft.Dropdown(
+        label="Cliente", 
+        options=[], 
+        expand=True,
+        enable_filter=True,
+    )
+
+
     produtos_dropdown = ft.Dropdown(label="Produto", options=[], width=500)
 
     quantidade = ft.TextField(
@@ -38,23 +61,13 @@ def tela_emissao_nfe(page: ft.Page, conteudo: ft.Container):
         expand=True
     )
 
-    # 🔍 Função de busca de clientes
-    def atualizar_lista_clientes(texto):
-        texto = texto.lower().strip()
-        clientes = database.listar_clientes()
-        filtrados = [
-            c for c in clientes if texto in (c[1] or "").lower() or texto in (c[2] or "")
-        ]
-        ordenados = sorted(filtrados, key=lambda c: c[1].lower())
-        dropdown_clientes.options.clear()
-        for cliente in ordenados:
-            id, nome, cpf_cnpj, *_ = cliente
-            dropdown_clientes.options.append(
-                ft.dropdown.Option(str(id), f"{nome} - {cpf_cnpj}")
-            )
-        page.update()
+    # Preenche os clientes na inicialização
+    for cliente in sorted(database.listar_clientes(), key=lambda c: c[1].lower()):
+        id, nome, cpf_cnpj, *_ = cliente
+        dropdown_clientes.options.append(
+            ft.dropdown.Option(str(id), f"{nome} - {cpf_cnpj}")
+        )
 
-    # 🔁 Função chamada quando cliente é selecionado
     def cliente_selecionado(e):
         cliente_id = dropdown_clientes.value
         if not cliente_id:
@@ -63,25 +76,17 @@ def tela_emissao_nfe(page: ft.Page, conteudo: ft.Container):
         if cliente:
             nome_cliente.value = f"👤 Nome: {cliente[1]}"
             cpf_cnpj_cliente.value = f"🆔 CPF/CNPJ: {cliente[2]}"
+            inscricao_estadual.value = cliente[3] or ""  # Supondo que campo 3 seja IE
             page.update()
 
     dropdown_clientes.on_change = cliente_selecionado
 
-    # 🔍 Função de busca de produtos
-    def atualizar_lista_produtos(texto):
-        texto = texto.lower().strip()
-        produtos = database.listar_produtos()
-        filtrados = [
-            p for p in produtos if texto in (p[1] or "").lower() or texto in (p[2] or "").lower()
-        ]
-        ordenados = sorted(filtrados, key=lambda p: p[2].lower())
-        produtos_dropdown.options.clear()
-        for produto in ordenados:
-            id, ean, descricao, _, valor = produto
-            produtos_dropdown.options.append(
-                ft.dropdown.Option(str(id), f"{descricao} | R$ {valor:.2f} | Ref: {ean}")
-            )
-        page.update()
+    # Preenche os produtos na inicialização
+    for produto in sorted(database.listar_produtos(), key=lambda p: p[2].lower()):
+        id, ean, descricao, _, valor = produto
+        produtos_dropdown.options.append(
+            ft.dropdown.Option(str(id), f"{descricao} | R$ {valor:.2f} | Ref: {ean}")
+        )
 
     def atualizar_total():
         total = sum(p["subtotal"] for p in produtos_adicionados)
@@ -134,7 +139,6 @@ def tela_emissao_nfe(page: ft.Page, conteudo: ft.Container):
             return
 
         try:
-            # Gera XML
             xml = gerar_xml_nfe(
                 cliente_id=int(dropdown_clientes.value),
                 itens=produtos_adicionados,
@@ -144,14 +148,12 @@ def tela_emissao_nfe(page: ft.Page, conteudo: ft.Container):
             with open("xml_nfe_nao_assinado.xml", "w", encoding="utf-8") as f:
                 f.write(xml)
 
-            # Assina XML
             cert, key = carregar_certificado("certificado.pfx", "sua_senha")
             xml_assinado = assinar_nfe(xml, cert, key)
 
             with open("xml_nfe_assinado.xml", "w", encoding="utf-8") as f:
                 f.write(xml_assinado)
 
-            # Aqui você pode chamar `enviar_nfe_para_sefaz(xml_assinado)` depois
             page.snack_bar = ft.SnackBar(
                 content=ft.Text("✅ XML gerado e assinado com sucesso!"),
                 bgcolor=ft.Colors.GREEN,
@@ -184,19 +186,20 @@ def tela_emissao_nfe(page: ft.Page, conteudo: ft.Container):
         page.dialog.open = True
         page.update()
 
-    # Layout da tela
     layout = ft.Column([
         ft.Text("🧾 Emissão de NF-e", size=22, weight="bold"),
-        ft.TextField(label="🔎 Buscar cliente por nome ou CPF/CNPJ", on_change=lambda e: atualizar_lista_clientes(e.control.value), expand=True),
         dropdown_clientes,
         card_cliente,
         ft.Divider(),
 
-        ft.TextField(label="🔎 Buscar produto por nome ou código", on_change=lambda e: atualizar_lista_produtos(e.control.value), expand=True),
-        ft.Row([produtos_dropdown, quantidade, ft.ElevatedButton("Adicionar", on_click=adicionar_item)], spacing=10),
+        ft.Row([
+            produtos_dropdown,
+            quantidade,
+            ft.ElevatedButton("Adicionar", on_click=adicionar_item)
+        ], spacing=10),
+
         lista_itens,
         total_label,
-
         ft.Divider(),
         observacoes,
 

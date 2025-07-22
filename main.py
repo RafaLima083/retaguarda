@@ -11,8 +11,6 @@ def main(page: ft.Page):
     page.title = "Sistema de Notas Fiscais"
     
     page.window.maximized=True
-    # page.window_width = 1000
-    # page.window_height = 900
     page.theme_mode = ft.ThemeMode.LIGHT
 
     # Cria o banco de dados se não existir

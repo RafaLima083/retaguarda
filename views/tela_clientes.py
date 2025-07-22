@@ -15,7 +15,11 @@ def tela_cadastro_clientes(page: ft.Page, conteudo: ft.Container, modo_edicao=Fa
         on_change=lambda e: atualizar_mascara_cpf_cnpj(e),
         on_blur=lambda e: preencher_dados_cnpj(e),
     )
-
+    rg_ie = ft.TextField(
+        label="RG ou Inscrição estadual",
+        expand=True,
+        value=valores["rg_ie"] if valores else "",
+    )
     telefone = ft.TextField(
         label="Telefone",
         expand=True,
@@ -66,6 +70,7 @@ def tela_cadastro_clientes(page: ft.Page, conteudo: ft.Container, modo_edicao=Fa
                 bairro.value = dados.get("bairro", "")
                 cidade.value = dados.get("municipio", "")
                 uf.value = dados.get("uf", "")
+                rg_ie.value = dados.get("RG_IE", "")
                 msg_status.value = "✅ Dados do CNPJ preenchidos automaticamente"
                 msg_status.color = ft.Colors.GREEN
             else:
@@ -122,6 +127,7 @@ def tela_cadastro_clientes(page: ft.Page, conteudo: ft.Container, modo_edicao=Fa
                 "uf": uf.value,
                 "telefone": telefone.value,
                 "email": email.value,
+                "RG_IE": rg_ie.value,
             }
 
             if modo_edicao:
@@ -145,7 +151,8 @@ def tela_cadastro_clientes(page: ft.Page, conteudo: ft.Container, modo_edicao=Fa
             ft.Text("👤 Cadastro de Clientes", size=22, weight="bold"),
             ft.Row([botao_salvar, botao_limpar], spacing=10),
             cpf_cnpj,
-            nome,            
+            nome,
+            rg_ie,            
             ft.Row([cep, numero, complemento], spacing=10),
             logradouro,
             bairro,
@@ -153,6 +160,7 @@ def tela_cadastro_clientes(page: ft.Page, conteudo: ft.Container, modo_edicao=Fa
             telefone,
             email,
             msg_status,
+            rg_ie,
         ],
         spacing=10,
     )
@@ -170,7 +178,7 @@ def tela_listagem_clientes(page: ft.Page, conteudo: ft.Container):
             (
                 id_,
                 nome_val, cpf_val, cep_val, log_val, num_val,
-                comp_val, bairro_val, cidade_val, uf_val, tel_val, email_val
+                comp_val, bairro_val, cidade_val, uf_val, tel_val, email_val, rg_ie_val,
             ) = cliente
 
             tela_cadastro_clientes(
@@ -190,6 +198,7 @@ def tela_listagem_clientes(page: ft.Page, conteudo: ft.Container):
                     "uf": uf_val,
                     "telefone": tel_val,
                     "email": email_val,
+                    "Rg_ie": rg_ie_val,
                 }
             )
 

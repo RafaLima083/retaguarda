@@ -10,6 +10,7 @@ def criar_tabela_clientes():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
             cpf_cnpj TEXT NOT NULL UNIQUE,
+            RG_IE TEXT NOT NULL UNIQUE,    
             cep TEXT,
             logradouro TEXT,
             numero TEXT,
