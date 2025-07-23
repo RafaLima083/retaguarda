@@ -15,25 +15,9 @@ def tela_cadastro_clientes(page: ft.Page, conteudo: ft.Container, modo_edicao=Fa
         on_change=lambda e: atualizar_mascara_cpf_cnpj(e),
         on_blur=lambda e: preencher_dados_cnpj(e),
     )
-    rg_ie = ft.TextField(
-        label="RG ou Inscrição estadual",
-        expand=True,
-        value=valores["rg_ie"] if valores else "",
-    )
-    telefone = ft.TextField(
-        label="Telefone",
-        expand=True,
-        value=valores["telefone"] if valores else "",
-        on_change=lambda e: atualizar_mascara_telefone(e),
-    )
-
-    cep = ft.TextField(
-        label="CEP",
-        expand=True,
-        value=valores["cep"] if valores else "",
-        on_change=lambda e: atualizar_mascara_cep(e),
-        on_blur=lambda e: preencher_endereco_por_cep(e),
-    )
+    rg_ie = ft.TextField(label="RG ou Inscrição estadual", expand=True, value=valores.get("rg_ie", "") if valores else "")
+    telefone = ft.TextField(label="Telefone", expand=True, value=valores["telefone"] if valores else "", on_change=lambda e: atualizar_mascara_telefone(e))
+    cep = ft.TextField(label="CEP", expand=True, value=valores["cep"] if valores else "", on_change=lambda e: atualizar_mascara_cep(e), on_blur=lambda e: preencher_endereco_por_cep(e))
 
     logradouro = ft.TextField(label="Logradouro", expand=True, value=valores["logradouro"] if valores else "")
     numero = ft.TextField(label="Número", expand=True, value=valores["numero"] if valores else "")
@@ -42,19 +26,15 @@ def tela_cadastro_clientes(page: ft.Page, conteudo: ft.Container, modo_edicao=Fa
     cidade = ft.TextField(label="Cidade", expand=True, value=valores["cidade"] if valores else "")
     uf = ft.TextField(label="Estado", expand=True, value=valores["uf"] if valores else "")
     email = ft.TextField(label="E-mail", expand=True, value=valores["email"] if valores else "")
-    msg_status = ft.Text("", color=ft.Colors.GREEN_700)
 
     def atualizar_mascara_cpf_cnpj(e):
         cpf_cnpj.value = formatar_cpf_cnpj(cpf_cnpj.value)
-        page.update()
 
     def atualizar_mascara_telefone(e):
         telefone.value = formatar_telefone(telefone.value)
-        page.update()
 
     def atualizar_mascara_cep(e):
         cep.value = formatar_cep(cep.value)
-        page.update()
 
     def preencher_dados_cnpj(e):
         cnpj = re.sub(r'\D', '', cpf_cnpj.value)
@@ -71,11 +51,11 @@ def tela_cadastro_clientes(page: ft.Page, conteudo: ft.Container, modo_edicao=Fa
                 cidade.value = dados.get("municipio", "")
                 uf.value = dados.get("uf", "")
                 rg_ie.value = dados.get("RG_IE", "")
-                msg_status.value = "✅ Dados do CNPJ preenchidos automaticamente"
-                msg_status.color = ft.Colors.GREEN
+
+                page.snack_bar = ft.SnackBar(content=ft.Text("✅ CNPJ preenchido automaticamente"), bgcolor=ft.Colors.GREEN)
             else:
-                msg_status.value = "❌ CNPJ inválido ou limite de requisições excedido"
-                msg_status.color = ft.Colors.RED
+                page.snack_bar = ft.SnackBar(content=ft.Text("❌ CNPJ inválido ou falha na consulta"), bgcolor=ft.Colors.RED)
+            page.snack_bar.open = True
             page.update()
 
     def preencher_endereco_por_cep(e):
@@ -85,35 +65,33 @@ def tela_cadastro_clientes(page: ft.Page, conteudo: ft.Container, modo_edicao=Fa
             bairro.value = dados.get("bairro", "")
             cidade.value = dados.get("localidade", "")
             uf.value = dados.get("uf", "")
-            msg_status.value = "✅ Endereço preenchido via CEP"
-            msg_status.color = ft.Colors.GREEN
+            page.snack_bar = ft.SnackBar(content=ft.Text("✅ Endereço preenchido via CEP"), bgcolor=ft.Colors.GREEN)
         else:
-            msg_status.value = "❌ CEP inválido ou não encontrado"
-            msg_status.color = ft.Colors.RED
+            page.snack_bar = ft.SnackBar(content=ft.Text("❌ CEP inválido ou não encontrado"), bgcolor=ft.Colors.RED)
+        page.snack_bar.open = True
         page.update()
 
     def limpar_formulario(e=None):
-        for campo in [nome, cpf_cnpj, cep, logradouro, numero, complemento, bairro, cidade, uf, telefone, email]:
+        for campo in [nome, cpf_cnpj, rg_ie, cep, logradouro, numero, complemento, bairro, cidade, uf, telefone, email]:
             campo.value = ""
-        msg_status.value = ""
         page.update()
 
     def salvar_cliente(e):
         if nome.value.strip() == "":
-            msg_status.value = "❌ Nome é obrigatório"
-            msg_status.color = ft.Colors.RED
+            mensagem = "❌ Nome é obrigatório"
+            cor = ft.Colors.RED
         elif not modo_edicao and database.cliente_existe(cpf_cnpj.value):
-            msg_status.value = "❌ CPF ou CNPJ já cadastrado"
-            msg_status.color = ft.Colors.RED
+            mensagem = "❌ CPF ou CNPJ já cadastrado"
+            cor = ft.Colors.RED
         elif not validar_cpf_cnpj(cpf_cnpj.value):
-            msg_status.value = "❌ CPF ou CNPJ inválido"
-            msg_status.color = ft.Colors.RED
+            mensagem = "❌ CPF ou CNPJ inválido"
+            cor = ft.Colors.RED
         elif len(re.sub(r'\D', '', telefone.value)) < 10:
-            msg_status.value = "❌ Telefone incompleto"
-            msg_status.color = ft.Colors.RED
+            mensagem = "❌ Telefone incompleto"
+            cor = ft.Colors.RED
         elif len(re.sub(r'\D', '', cep.value)) != 8:
-            msg_status.value = "❌ CEP inválido"
-            msg_status.color = ft.Colors.RED
+            mensagem = "❌ CEP inválido"
+            cor = ft.Colors.RED
         else:
             dados = {
                 "nome": nome.value,
@@ -127,45 +105,46 @@ def tela_cadastro_clientes(page: ft.Page, conteudo: ft.Container, modo_edicao=Fa
                 "uf": uf.value,
                 "telefone": telefone.value,
                 "email": email.value,
-                "RG_IE": rg_ie.value,
+                "rg_ie": rg_ie.value,
             }
 
             if modo_edicao:
                 database.atualizar_cliente(cliente_id, dados)
-                msg_status.value = "✅ Cliente atualizado com sucesso!"
+                mensagem = "✅ Cliente atualizado com sucesso!"
             else:
                 database.salvar_cliente_db(dados)
-                msg_status.value = f"✅ Cliente '{dados['nome']}' salvo com sucesso!"
+                mensagem = f"✅ Cliente '{dados['nome']}' salvo com sucesso!"
                 limpar_formulario()
 
-            msg_status.color = ft.Colors.GREEN
+            cor = ft.Colors.GREEN
 
+        page.snack_bar = ft.SnackBar(content=ft.Text(mensagem), bgcolor=cor)
+        page.snack_bar.open = True
         page.update()
 
     # Botões
-    botao_salvar = ft.ElevatedButton(text="Salvar", icon=ft.Icons.SAVE, on_click=salvar_cliente)
-    botao_limpar = ft.ElevatedButton(text="Limpar", icon=ft.Icons.CLEAR_ALL, on_click=limpar_formulario)
+    botoes = ft.Row([
+        ft.ElevatedButton(text="Salvar", icon=ft.Icons.SAVE, on_click=salvar_cliente),
+        ft.ElevatedButton(text="Limpar", icon=ft.Icons.CLEAR_ALL, on_click=limpar_formulario),
+    ], spacing=10)
 
-    formulario = ft.Column(
-        [
-            ft.Text("👤 Cadastro de Clientes", size=22, weight="bold"),
-            ft.Row([botao_salvar, botao_limpar], spacing=10),
-            cpf_cnpj,
-            nome,
-            rg_ie,            
-            ft.Row([cep, numero, complemento], spacing=10),
-            logradouro,
-            bairro,
-            ft.Row([cidade, uf], spacing=10),
-            telefone,
-            email,
-            msg_status,
-            rg_ie,
-        ],
-        spacing=10,
+    formulario = ft.Column([
+        ft.Text("👤 Cadastro de Clientes", size=22, weight="bold"),        
+        cpf_cnpj, nome, rg_ie,
+        ft.Row([cep, numero, complemento], spacing=10),
+        logradouro, bairro,
+        ft.Row([cidade, uf], spacing=10),
+        telefone, email,
+        botoes,
+        
+    ], spacing=10)
+
+    conteudo.content = ft.Container(
+        content=formulario,
+        padding=20,
+        alignment=ft.alignment.top_center,
+        width=600
     )
-
-    conteudo.content = ft.Container(content=formulario, padding=20)
     page.update()
 
 
@@ -176,16 +155,12 @@ def tela_listagem_clientes(page: ft.Page, conteudo: ft.Container):
         cliente = database.buscar_cliente_por_id(id_cliente)
         if cliente:
             (
-                id_,
-                nome_val, cpf_val, cep_val, log_val, num_val,
+                id_, nome_val, cpf_val, cep_val, log_val, num_val,
                 comp_val, bairro_val, cidade_val, uf_val, tel_val, email_val, rg_ie_val,
             ) = cliente
 
             tela_cadastro_clientes(
-                page,
-                conteudo,
-                modo_edicao=True,
-                cliente_id=id_,
+                page, conteudo, modo_edicao=True, cliente_id=id_,
                 valores={
                     "nome": nome_val,
                     "cpf_cnpj": cpf_val,
@@ -198,62 +173,36 @@ def tela_listagem_clientes(page: ft.Page, conteudo: ft.Container):
                     "uf": uf_val,
                     "telefone": tel_val,
                     "email": email_val,
-                    "Rg_ie": rg_ie_val,
+                    "rg_ie": rg_ie_val,
                 }
             )
 
-    def excluir_cliente_direto(page: ft.Page, conteudo: ft.Container, id_cliente: int):
-    
+    def excluir_cliente_direto(e, id_cliente):
         try:
             database.excluir_cliente(id_cliente)
-
-            page.snack_bar = ft.SnackBar(
-                content=ft.Text(f"✅ Cliente excluído com sucesso."),
-                bgcolor=ft.Colors.GREEN_600,
-                duration=2000,
-            )
-            page.snack_bar.open =True
-
+            #page.snack_bar = ft.SnackBar(content=ft.Text("✅ Cliente excluído com sucesso."), bgcolor=ft.Colors.GREEN_600, duration=3000)
+            page.open(ft.SnackBar(ft.Text("✅ Cliente excluído com sucesso."), bgcolor=ft.Colors.GREEN_600, duration=3000))
         except Exception as erro:
-            page.snack_bar = ft.SnackBar(
-                content=ft.Text(f"❌ Erro ao excluir: {erro}"),
-                bgcolor=ft.Colors.RED,
-                behavior=ft.SnackBarBehavior.FLOATING,
-                duration=4000,
-            )
-            page.snack_bar.open =True
+            page.open = (ft.SnackBar(ft.Text(f"❌ Erro ao excluir: {erro}"), bgcolor=ft.Colors.RED, duration=4000))
         finally:
-            tela_listagem_clientes(page, conteudo)       
-                
-        page.update()
+            page.open = ft.SnackBar=True
+            tela_listagem_clientes(page, conteudo)
 
-    # Monta tabela
     linhas = []
     for cliente in clientes:
         id_, nome, cpf_cnpj, telefone, email = cliente
-        linha = ft.DataRow(
-            cells=[
-                ft.DataCell(ft.Text(nome)),
-                ft.DataCell(ft.Text(cpf_cnpj)),
-                ft.DataCell(ft.Text(telefone)),
-                ft.DataCell(ft.Text(email)),
-                ft.DataCell(
-                    ft.Row([
-                        ft.IconButton(
-                            icon=ft.Icons.EDIT,
-                            tooltip="Editar",
-                            on_click=lambda e, id=id_: carregar_edicao_cliente(e, id)
-                        ),
-                        ft.IconButton(
-                            icon=ft.Icons.DELETE,
-                            icon_color=ft.Colors.RED,
-                            tooltip="Excluir",
-                            on_click=lambda e, id=id_: excluir_cliente_direto(page, conteudo, id)
-                        ),
-                    ])
-                )
-            ]
-        )
+        linha = ft.DataRow(cells=[
+            ft.DataCell(ft.Text(nome)),
+            ft.DataCell(ft.Text(cpf_cnpj)),
+            ft.DataCell(ft.Text(telefone)),
+            ft.DataCell(ft.Text(email)),
+            ft.DataCell(
+                ft.Row([
+                    ft.IconButton(icon=ft.Icons.EDIT, tooltip="Editar", on_click=lambda e, id=id_: carregar_edicao_cliente(e, id)),
+                    ft.IconButton(icon=ft.Icons.DELETE, icon_color=ft.Colors.RED, tooltip="Excluir", on_click=lambda e, id=id_: excluir_cliente_direto(e, id)),
+                ])
+            )
+        ])
         linhas.append(linha)
 
     tabela = ft.DataTable(
@@ -267,12 +216,8 @@ def tela_listagem_clientes(page: ft.Page, conteudo: ft.Container):
         rows=linhas
     )
 
-    conteudo.content = ft.Column(
-        [
-            ft.Text("📋 Lista de Clientes", size=22, weight="bold"),
-            tabela
-        ],
-        scroll=ft.ScrollMode.AUTO,
-        expand=True
-    )
+    conteudo.content = ft.Column([
+        ft.Text("📋 Lista de Clientes", size=22, weight="bold"),
+        tabela
+    ], scroll=ft.ScrollMode.AUTO, expand=True)
     page.update()

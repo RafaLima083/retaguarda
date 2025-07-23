@@ -1,10 +1,11 @@
 import flet as ft
-from views.tela_clientes import tela_cadastro_clientes, tela_listagem_clientes
-from views.tela_produtos import tela_cadastro_produtos, tela_listagem_produtos
-from views.tela_configuracoes import tela_configuracoes_emitente
-from views.tela_emissao_nfe import tela_emissao_nfe
-
-from views.menu import criar_menu_lateral
+from views import(
+    tela_clientes,
+    tela_produtos,
+    tela_configuracoes_emitente,
+    tela_emissao_nfe,
+    menu
+)
 import database
 
 def main(page: ft.Page):
@@ -13,36 +14,53 @@ def main(page: ft.Page):
     page.window.maximized=True
     page.theme_mode = ft.ThemeMode.LIGHT
 
-    # Cria o banco de dados se não existir
-    database.criar_tabela_clientes()
-    database.criar_tabela_produtos()
-    database.criar_tabela_emitente()
-    database.criar_tabela_configuracoes()
-    database.criar_tabela_nfe()
+    # Inicializa o banco de dados
+    try:    
+        database.inicializar_banco()
+    except Exception as e:
+        page.dialog = ft.AlertDialog(
+            title=ft.Text("Erro ao iniciar o banco de dados"),
+            content=ft.Text(str(e)),
+            actions=[ft.TextButton("Fechar", on_click=lambda e: page.dialog.close())]
+        )
+        page.dialog.open = True
+        page.update()
+        return
 
     # Container principal da área de conteúdo
     conteudo = ft.Container(expand=True)
 
     # Controla qual tela está sendo carregada
-    def carregar_pagina(nome):
-        if nome == "Cadastro de Clientes":
-            tela_cadastro_clientes(page, conteudo)
-        elif nome == "Listar Clientes":
-            tela_listagem_clientes(page, conteudo)
-        elif nome == "Cadastro de Produtos":
-            tela_cadastro_produtos(page, conteudo)
-        elif nome == "Listar Produtos":
-            tela_listagem_produtos(page, conteudo)
-        elif nome == "Emitente":
-            tela_configuracoes_emitente(page, conteudo)
-        elif nome == "Emitir NF-e":
-            tela_emissao_nfe(page, conteudo)
-        else:
-            conteudo.content = ft.Text(f"Você está em: {nome}", size=20)
-            page.update()
+    def navegar_para(nome):
+        match nome:
+            #Clientes
+            case "Cadastro de Clientes":
+                tela_clientes.tela_cadastro_clientes(page, conteudo)
+            case "Listar Clientes":
+                tela_clientes.tela_listagem_clientes(page, conteudo)
+                
+            #Produtos
+            case "Cadastro de Produtos":
+                tela_produtos.tela_cadastro_produtos(page, conteudo)
+            case "Listar Produtos":
+                tela_produtos.tela_listagem_produtos(page, conteudo)
+            
+            #Configurações
+            case "Emitente":
+                tela_configuracoes_emitente.tela_configuracoes_emitente(page, conteudo)
+
+            # Movimentações
+            case "Emitir NF-e":
+                tela_emissao_nfe.tela_emissao_nfe(page, conteudo)
+            
+            # caso der algum erro
+            case _:
+                conteudo.content = ft.Text(f"🚧 Página '{nome}' não encontrada.", size=20, color=ft.Colors.RED)
+                print(f"[AVISO] Página '{nome}' não existe.")
+                
 
     # Cria o menu lateral com os callbacks
-    menu_lateral = criar_menu_lateral(carregar_pagina)
+    menu_lateral = menu.criar_menu_lateral(navegar_para)
 
     # Layout principal com menu e conteúdo
     layout = ft.Row(
@@ -56,5 +74,5 @@ def main(page: ft.Page):
 
     page.add(layout)
 
-# Inicia a aplicação Flet
+# Inicializa app
 ft.app(target=main)
