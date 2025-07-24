@@ -149,6 +149,8 @@ def tela_cadastro_clientes(page: ft.Page, conteudo: ft.Container, modo_edicao=Fa
 
 
 def tela_listagem_clientes(page: ft.Page, conteudo: ft.Container):
+
+    
     clientes = database.listar_clientes()
 
     def carregar_edicao_cliente(e, id_cliente):

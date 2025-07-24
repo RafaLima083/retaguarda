@@ -87,6 +87,7 @@ def tela_configuracoes_emitente(page: ft.Page, conteudo: ft.Container):
 
             dados = consultar_cnpj(cnpj.value)
 
+            ie.value = dados["ie"]
             razao_social.value = dados["razao_social"]
             logradouro.value = dados["logradouro"]
             numero.value = dados["numero"]

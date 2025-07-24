@@ -1,5 +1,62 @@
 import flet as ft
-from views import(
+
+def main(page: ft.Page):
+    page.window.maximized = True
+
+    menu_visivel = True
+
+    def page_resize(e):
+        nonlocal menu_visivel
+        if page.width < 700 and menu_visivel:
+            menu_lateral.visible = False
+            menu_visivel = False
+        elif page.width >= 700 and not menu_visivel:
+            menu_lateral.visible = True
+            menu_visivel = True
+        page.update()
+
+    page.on_resized = page_resize
+
+    def navegar_para(pagina):
+        conteudo.value = f"📄 Você está em: {pagina}"
+        page.update()
+
+    menu_lateral = ft.Column(
+        [
+            ft.Text("Menu", color=ft.Colors.WHITE, size=18),
+            ft.ListTile(
+                title=ft.Text("Clientes", color=ft.Colors.WHITE),
+                on_click=lambda e: navegar_para("Clientes")
+            ),
+            ft.ListTile(
+                title=ft.Text("Produtos", color=ft.Colors.WHITE),
+                on_click=lambda e: navegar_para("Produtos")
+            ),
+        ],
+        expand=True,
+    )
+
+    menu_container = ft.Container(
+        content=menu_lateral,
+        width=200,
+        bgcolor=ft.Colors.BLUE_700,
+        padding=10,
+        visible=True
+    )
+
+    conteudo = ft.Text("Conteúdo principal")
+
+    layout = ft.ResponsiveRow(
+        [
+            ft.Container(menu_container, col={"sm": 12, "md": 2, "xl": 2}),
+            ft.Container(ft.VerticalDivider(width=1), col={"sm": 0, "md": 0.1}),
+            ft.Container(conteudo, col={"sm": 12, "md": 9.9}),
+        ],
+        spacing=0
+    )
+
+    page.add(layout) 
+from views import (
     tela_clientes,
     tela_produtos,
     tela_configuracoes_emitente,
@@ -10,69 +67,72 @@ import database
 
 def main(page: ft.Page):
     page.title = "Sistema de Notas Fiscais"
-    
-    page.window.maximized=True
+    page.window.maximizable = True
     page.theme_mode = ft.ThemeMode.LIGHT
 
-    # Inicializa o banco de dados
-    try:    
-        database.inicializar_banco()
-    except Exception as e:
-        page.dialog = ft.AlertDialog(
-            title=ft.Text("Erro ao iniciar o banco de dados"),
-            content=ft.Text(str(e)),
-            actions=[ft.TextButton("Fechar", on_click=lambda e: page.dialog.close())]
-        )
-        page.dialog.open = True
-        page.update()
-        return
+    database.inicializar_banco()
 
-    # Container principal da área de conteúdo
-    conteudo = ft.Container(expand=True)
+    conteudo = ft.Container(expand=True, padding=20)
+    menu_visivel = True
 
-    # Controla qual tela está sendo carregada
     def navegar_para(nome):
         match nome:
-            #Clientes
             case "Cadastro de Clientes":
                 tela_clientes.tela_cadastro_clientes(page, conteudo)
             case "Listar Clientes":
                 tela_clientes.tela_listagem_clientes(page, conteudo)
-                
-            #Produtos
             case "Cadastro de Produtos":
                 tela_produtos.tela_cadastro_produtos(page, conteudo)
             case "Listar Produtos":
                 tela_produtos.tela_listagem_produtos(page, conteudo)
-            
-            #Configurações
             case "Emitente":
                 tela_configuracoes_emitente.tela_configuracoes_emitente(page, conteudo)
-
-            # Movimentações
             case "Emitir NF-e":
                 tela_emissao_nfe.tela_emissao_nfe(page, conteudo)
-            
-            # caso der algum erro
             case _:
-                conteudo.content = ft.Text(f"🚧 Página '{nome}' não encontrada.", size=20, color=ft.Colors.RED)
-                print(f"[AVISO] Página '{nome}' não existe.")
-                
+                conteudo.content = ft.Text(f"🚧 Página '{nome}' não encontrada.", color=ft.Colors.RED)
+                page.update()
 
-    # Cria o menu lateral com os callbacks
-    menu_lateral = menu.criar_menu_lateral(navegar_para)
+    menu_coluna = menu.criar_menu_lateral(navegar_para)
 
-    # Layout principal com menu e conteúdo
-    layout = ft.Row(
-        controls=[
-            menu_lateral,
-            ft.VerticalDivider(width=1),
-            conteudo
+    menu_container = ft.Container(
+        content=menu_coluna,
+        bgcolor=ft.Colors.BLUE_800,
+        padding=10,
+        width=230,
+        visible=True,
+        
+    )
+
+    divider = ft.VerticalDivider(width=1, visible=True)
+
+    def page_resize(e):
+        nonlocal menu_visivel
+        if page.width < 720:
+            if menu_visivel:
+                menu_container.visible = False
+                divider.visible = False
+                menu_visivel = False
+        else:
+            if not menu_visivel:
+                menu_container.visible = True
+                divider.visible = True
+                menu_visivel = True
+        page.update()
+
+    page.on_resize = page_resize
+
+    layout = ft.ResponsiveRow(
+        [
+            ft.Container(menu_container, col={"sm": 0, "md": 2}),
+            ft.Container(divider, col={"sm": 0, "md": 0.1}),
+            ft.Container(conteudo, col={"sm": 12, "md": 9.9}),
         ],
-        expand=True
+        spacing=0
     )
 
     page.add(layout)
+    page_resize(None)
 
-# Inicializa app
 ft.app(target=main)
+
