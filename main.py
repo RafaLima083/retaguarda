@@ -44,7 +44,7 @@ def main(page: ft.Page):
                 page.update()
 
     # Cria menu lateral m callback de navegação
-    menu_lateral = menu.criar_menu_lateral(page, navegar_para)
+    menu_lateral = menu.criar_menu_lateral(navegar_para)
 
     # Containers do layout
     

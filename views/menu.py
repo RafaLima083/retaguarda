@@ -1,7 +1,7 @@
 import flet as ft
 import time
 
-def criar_menu_lateral(page: ft.Page, callback_navegacao):
+def criar_menu_lateral(callback_navegacao):
     container_lateral = ft.Container(expand=True)  # será preenchido abaixo
     
      # Estado do submenu
