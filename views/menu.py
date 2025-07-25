@@ -1,8 +1,8 @@
 import flet as ft
 import time
 
-def criar_menu_lateral(callback_navegacao):
-    container_lateral = ft.Container()  # será preenchido abaixo
+def criar_menu_lateral(page: ft.Page, callback_navegacao):
+    container_lateral = ft.Container(height=page.height)  # será preenchido abaixo
     
      # Estado do submenu
     submenu_visivel = ft.Column(visible=False, spacing=10)
@@ -93,6 +93,7 @@ def criar_menu_lateral(callback_navegacao):
         border_radius=0,
         scale=1,
         animate_scale=ft.Animation(duration=400, curve=ft.AnimationCurve.LINEAR),
+        expand=True,
         content=ft.Column(
             horizontal_alignment="center",
             spacing=20,

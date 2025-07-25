@@ -58,7 +58,8 @@ def main(page: ft.Page):
             ft.VerticalDivider(width=1),
             conteudo
         ],
-        expand=True
+        expand=True,
+        vertical_alignment=ft.CrossAxisAlignment.STRETCH,
 )
 
     # Responsividade ao redimensionar janela
