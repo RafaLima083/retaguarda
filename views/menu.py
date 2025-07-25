@@ -71,6 +71,19 @@ def criar_menu_lateral(callback_navegacao):
         ),
     ]
     
+    # Submenu Nostas fiscais
+    ft.Container(
+            ink=True,
+            on_click=lambda _: callback_navegacao("Emitir NF-e"),
+            border_radius=12,
+            padding=5,
+            content=ft.Row(
+                controls=[
+                    ft.Icon(ft.Icons.PRINT_ROUNDED, color=ft.Colors.WHITE, size=18),
+                    ft.Text("Emitir NF-e", color=ft.Colors.WHITE, size=12),
+                ]
+            )
+        ),
     
     # Preenchendo o container_lateral com o conteúdo agora que temos os controles acima
     container_lateral.content = ft.Container(
@@ -98,7 +111,9 @@ def criar_menu_lateral(callback_navegacao):
                 ),
 
                 # Submenu: clientes e produtos
-                submenu_visivel,                
+                submenu_visivel,
+
+                
                 ft.Container(
                     ink=True,
                     on_click=lambda _: callback_navegacao("Emitir NF-e"),

@@ -7,7 +7,7 @@ from views import (
     menu
 )
 import database
-from views.menu import criar_menu_lateral
+
 
 
 def main(page: ft.Page):
@@ -44,7 +44,7 @@ def main(page: ft.Page):
                 page.update()
 
     # Cria menu lateral m callback de navegação
-    menu_lateral = menu.criar_menu_lateral(navegar_para)
+    menu_lateral = menu.criar_menu_lateral(page, navegar_para)
 
     # Containers do layout
     
