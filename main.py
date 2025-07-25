@@ -1,61 +1,4 @@
 import flet as ft
-
-def main(page: ft.Page):
-    page.window.maximized = True
-
-    menu_visivel = True
-
-    def page_resize(e):
-        nonlocal menu_visivel
-        if page.width < 700 and menu_visivel:
-            menu_lateral.visible = False
-            menu_visivel = False
-        elif page.width >= 700 and not menu_visivel:
-            menu_lateral.visible = True
-            menu_visivel = True
-        page.update()
-
-    page.on_resized = page_resize
-
-    def navegar_para(pagina):
-        conteudo.value = f"📄 Você está em: {pagina}"
-        page.update()
-
-    menu_lateral = ft.Column(
-        [
-            ft.Text("Menu", color=ft.Colors.WHITE, size=18),
-            ft.ListTile(
-                title=ft.Text("Clientes", color=ft.Colors.WHITE),
-                on_click=lambda e: navegar_para("Clientes")
-            ),
-            ft.ListTile(
-                title=ft.Text("Produtos", color=ft.Colors.WHITE),
-                on_click=lambda e: navegar_para("Produtos")
-            ),
-        ],
-        expand=True,
-    )
-
-    menu_container = ft.Container(
-        content=menu_lateral,
-        width=200,
-        bgcolor=ft.Colors.BLUE_700,
-        padding=10,
-        visible=True
-    )
-
-    conteudo = ft.Text("Conteúdo principal")
-
-    layout = ft.ResponsiveRow(
-        [
-            ft.Container(menu_container, col={"sm": 12, "md": 2, "xl": 2}),
-            ft.Container(ft.VerticalDivider(width=1), col={"sm": 0, "md": 0.1}),
-            ft.Container(conteudo, col={"sm": 12, "md": 9.9}),
-        ],
-        spacing=0
-    )
-
-    page.add(layout) 
 from views import (
     tela_clientes,
     tela_produtos,
@@ -64,17 +7,24 @@ from views import (
     menu
 )
 import database
+from views.menu import criar_menu_lateral
+
 
 def main(page: ft.Page):
     page.title = "Sistema de Notas Fiscais"
-    page.window.maximizable = True
     page.theme_mode = ft.ThemeMode.LIGHT
+    page.window.maximized = True
+    page.scroll = ft.ScrollMode.HIDDEN
+    page.padding = 0
 
+    # Inicializa banco
     database.inicializar_banco()
 
+    # Variáveis de controle
     conteudo = ft.Container(expand=True, padding=20)
-    menu_visivel = True
+    
 
+    # Função de navegação entre telas
     def navegar_para(nome):
         match nome:
             case "Cadastro de Clientes":
@@ -93,46 +43,30 @@ def main(page: ft.Page):
                 conteudo.content = ft.Text(f"🚧 Página '{nome}' não encontrada.", color=ft.Colors.RED)
                 page.update()
 
-    menu_coluna = menu.criar_menu_lateral(navegar_para)
+    # Cria menu lateral m callback de navegação
+    menu_lateral = menu.criar_menu_lateral(navegar_para)
 
-    menu_container = ft.Container(
-        content=menu_coluna,
-        bgcolor=ft.Colors.BLUE_800,
-        padding=10,
-        width=230,
-        visible=True,
-        
-    )
+    # Containers do layout
+    
 
-    divider = ft.VerticalDivider(width=1, visible=True)
+    divisor = ft.VerticalDivider(width=1, visible=True)
 
-    def page_resize(e):
-        nonlocal menu_visivel
-        if page.width < 720:
-            if menu_visivel:
-                menu_container.visible = False
-                divider.visible = False
-                menu_visivel = False
-        else:
-            if not menu_visivel:
-                menu_container.visible = True
-                divider.visible = True
-                menu_visivel = True
-        page.update()
-
-    page.on_resize = page_resize
-
-    layout = ft.ResponsiveRow(
-        [
-            ft.Container(menu_container, col={"sm": 0, "md": 2}),
-            ft.Container(divider, col={"sm": 0, "md": 0.1}),
-            ft.Container(conteudo, col={"sm": 12, "md": 9.9}),
+    # Layout principal com menu lateral + conteúdo
+    layout = ft.Row(
+        controls=[
+            menu_lateral,
+            ft.VerticalDivider(width=1),
+            conteudo
         ],
-        spacing=0
-    )
+        expand=True
+)
 
+    # Responsividade ao redimensionar janela
+    
     page.add(layout)
-    page_resize(None)
 
-ft.app(target=main)
 
+
+# Início da aplicação Flet
+if __name__ == "__main__":
+    ft.app(target=main)
